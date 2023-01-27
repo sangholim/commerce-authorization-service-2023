@@ -1,0 +1,11 @@
+.github/
+
+# deployments/
+# providers/
+sample-client/
+# themes/
+
+.dockerignore
+.gitignore
+docker-compose.yml
+README.md

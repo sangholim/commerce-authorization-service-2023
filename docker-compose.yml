@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: commerce/keycloak
+    build:
+      context: .
+      dockerfile: keycloak.Dockerfile
+      target: production
+    ports:
+      - '8080:8080'
+    entrypoint: /opt/keycloak/bin/kc.sh start-dev
+    environment:
+      # 임시 관리자 계정 아이디
+      KEYCLOAK_ADMIN: admin
+      # 임시 관리자 계정 비밀번호
+      KEYCLOAK_ADMIN_PASSWORD: password
+      KC_DB_URL_HOST: postgres
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: password
+      # Keycloak의 서버 설정에 사용할 default hostname
+      KC_HOSTNAME: localhost
+      # Reverse Proxy 설정 for Production ONLY
+      # KC_PROXY: edge
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.7-alpine
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./tmp/pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: keycloak
